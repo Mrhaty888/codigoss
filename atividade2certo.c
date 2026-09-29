@@ -1,18 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
+#include <locale.h>
 typedef struct hamburguerias{
     char nomeEstabelecimento[40];
     float precoHamburguer, precoCerveja;
 } hamburguerias;
 
-void limparBuffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
-
-void cadastrar(int n, hamburguerias hamburguer[15], int totalH, int atualH){
+void cadastrar(hamburguerias hamburguer[15], int totalH, int atualH){
 
     int novoTotal = totalH + atualH;
 
@@ -21,9 +15,10 @@ void cadastrar(int n, hamburguerias hamburguer[15], int totalH, int atualH){
         gets(hamburguer[i].nomeEstabelecimento);
         printf("Digite o preco do hamburguer: \n");
         scanf("%f", &hamburguer[i].precoHamburguer);
+        getchar();
         printf("Digite o preco da cerveja: \n");
         scanf("%f", &hamburguer[i].precoCerveja);
-        limparBuffer();
+        getchar();
 
     }
 }
@@ -39,21 +34,13 @@ void menorCombo(hamburguerias hamburguer[15], int totalH) {
         }
     }
 
-    char estabelecimento[15][40];
-    int iEsta = 0;
+    printf("O menor preco foi de R$%.2f , as hamburgueria(s) com o menor valor sao: \n", menorValor);
 
     for (int i = 0; i < totalH; i++) {
         valorCombo = hamburguer[i].precoCerveja + hamburguer[i].precoHamburguer;
         if (valorCombo == menorValor) {
-            strcpy(estabelecimento[iEsta], hamburguer[i].nomeEstabelecimento);
-            iEsta++;
+            printf("- %s\n", hamburguer[i].nomeEstabelecimento);
         }
-    }
-
-    printf("O menor preco foi de R$%.2f , as hamburgueria(s) com o menor valor sao: \n", menorValor);
-
-    for (int i = 0; i < iEsta; i++) {
-        printf("- %s\n", estabelecimento[i]);
     }
 }
 
@@ -71,6 +58,7 @@ void medioCerveja(hamburguerias hamburguer[15], int totalH) {
 }
 
 void main(){
+    setlocale(LC_ALL,"portuguese");
     hamburguerias hamburgueria[15];
     int i, menor, opcao, totalHamburguerias = 0, atualHamburgueria;
 
@@ -81,23 +69,25 @@ void main(){
         printf("\n[2] - Menor preco do combo");
         printf("\n[3] - Preco medio da cerveja na cidade");
         printf("\n[0] - Sair\n");
-
         scanf("%d", &opcao);
+
+        system("cls");
+
 
         switch (opcao) {
             case 1:
-                printf("Digite quantas hambuerguerias deseja cadastrar: \n");
+                printf("Digite quantas hamburguerias deseja cadastrar: \n");
                 scanf(" %d", &atualHamburgueria);
-                limparBuffer();
+                getchar();
 
                 if (totalHamburguerias + atualHamburgueria > 15) {
-                    printf("O maximo de hamburguerias eh 15.\n");
+                    printf("O maximo de hamburguerias é 15.\n");
                     getchar();
                 } else if (atualHamburgueria <= 0) {
                     printf("O numero de hamburguerias deve ser mais que 0.");
                     getchar();
                 } else {
-                    cadastrar(atualHamburgueria, hamburgueria, totalHamburguerias, atualHamburgueria);
+                    cadastrar(hamburgueria, totalHamburguerias, atualHamburgueria);
                     totalHamburguerias += atualHamburgueria;
                 }
 
@@ -118,8 +108,13 @@ void main(){
                 } else {
                     printf("Ainda nao tem hamburguerias cadastradas.\n");
                 }
+                break;
+
+            case 0:
+                break;
 
             default:
+                printf("Digite de 0 a 3.\n");
                 break;
         }
         system("pause");
@@ -127,6 +122,7 @@ void main(){
 
     } while (opcao != 0);
 
-    printf("Saindo . . .");
+    printf("Saindo . . .\n");
 
 }
+
